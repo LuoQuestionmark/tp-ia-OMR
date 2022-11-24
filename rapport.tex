@@ -1,0 +1,85 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[numbers]{natbib}
+\usepackage{parskip}
+\usepackage{marginnote}
+
+\author{Wenhao LUO}
+\date{\today}
+\title{Rapport de l'analyse d'un sujet spécifique de l'intelligence artificielle}
+
+\begin{document}
+\maketitle
+\begin{center}
+    code permanent : \textbf{LUOW09129805}
+\end{center}
+\newpage
+
+\section{Introduction}
+\par Ce document est le résumé sur une analyse d'un sujet spécifique de l'intelligence artificielle, demandé par le cours d'intelligence artificielle de l'UQAC (8INF878). Le sujet choisi pour cette analyse est "reconnaissance optique de musique", cette analyse est basée originalement sur un état de l'art écrit\cite{shatri2020optical}. Au cours de la lecture, on trouve que ce sujet est très vaste, donc après une introduction générale, on se concerne sur une problématique spécifique, à l'aide d'un autre article\cite{dos2009staff}.
+
+\section{Présentation du sujet}
+\par La reconnaissance optique de musique, ou \textit{optical music recognition} en anglais, est une recherche sur les approches informatiques pour la lecture des documents musicaux (partitions). C'est un sujet est est recherché depuis plus que 50 ans. Elle est considérée originalement comme une extension de la reconnaissance optique de texte ; pourtant l'article étudié a nous rappelons que une partition porte les informatiques de 2D, qui est plus compliqué par rapport un document textuel, qui porte les informations de 1D.
+
+\par Les recherches étudient principalement avec les notations \textit{Common Western Music Notation}, qui sont les notations utilisées couramment. Un pipeline de traitement a été établit basé sur ces notations avec l'ordre suivante :
+\begin{itemize}
+    \item prétraitement d'image ;
+    \item détection des symboles musicaux ;
+    \item reconstruction des notations ;
+    \item encodage et archivage.
+\end{itemize}
+
+On se concentre sur un des traitements dans la partie détection. C'est la détection de \textit{staff}\footnote{Une traduction en français doit être "la porté", mais je ne suis pas sûr.}. Ce sont les lignes horizontales dans des partitions qui permettent de fixer la position des autres symboles. L'article \cite{dos2009staff} présentent une solution nouvelle, nommée \textit{stable paths}.
+
+\section{Analyse de l'article}
+\subsection{Présentation sur les algorithmes précédents}
+\par Cet article commence par une introduction, dans laquelle il a donné un état de l'art bref, ensuite une présentation sur les algorithmes utilisés pour cette problématique. Les solutions comme :
+\marginnote {\small Les solutions précédentes sont mentionnées comme des références, et elles sont également utilisées pour montrer la différence entre la solution proposé dans cet article.} 
+\begin{itemize}
+    \item utiliser une projection horizontale avec une recherche de minima locale ;
+    \item \textit{mathematical morphology algorithmes} ;
+    \item \textit{rule-based classification}.
+\end{itemize}
+\subsection{Définitions conventionnelles}
+\subsubsection{Graphe dans une partition}
+\par Cet article a commencé proposé son algorithme par définir un graphe dans une partition musical. On considère que une partition scannée est un ensemble des pixels, et on traite les pixels comme des nœuds d'un graphe. Ensuite les arêtes sont définies : ce sont les connexions entre des nœuds et ses voisins. En fonction de la position relative des deux nœuds connectés, chaque arête est affectée un valeur. C'est le coût, ou la distance entre un pixel/nœud et un autre.
+\subsubsection{Définition d'un chemin}
+\par Ensuite, un chemin est défini comme une suite des nœuds connectés, et la distance de ce chemin égale à la somme de la valeur affectée sur chacune des arêtes entre les nœuds voisins.
+\par Les chercheurs ont ensuite élargit la définition de distance, et ils ont l'appliquée entre deux ensembles des pixels. On peut donc définir la distance entre deux régions sur une partition. 
+\marginnote{\small Ici, cet élargissement de la définition est quelque chose typique dans l'analyse mathématique. Je n'explique pas détailement car il semble assez évident.}
+
+\subsection{Problématique proposée}
+\par Sous l'hypothèse que une ligne du \textit{staff} doit être continue et connecté entre la partie gauche et la partie droite d'une partition avec un ligne quasiment droite, le problème donc se transforme en cherchant des chemins plus courts dans un graphe. Un chemin est "stable" entre deux régions s'il est le chemin plus court entre chaque élément d'une région et l'autre. L'enjeu de cet algorithme est donc retrouver toutes les chemins stables de ces deux parties. Selon le modèle simplifié que cet article a fourni, toutes les chemins plus courts sont donc le \textit{staff}.
+
+\subsection{Algorithme proposé pour le calcul}
+\par Le algorithme présenté dans l'article est le suivant\footnote{C'est la description origine dans cet article.} :
+\begin{verbatim}
+Preprocessing:
+    compute staffspaceheight and stafflineheight
+    compute weights of the graph
+Main Cycle:
+    compute stable paths
+    validate paths with blackness and shape
+    erase valid paths from image
+    add valid paths to list of stafflines
+    end of cycle if no valid path was found
+Postprocessing:
+    uncross stafflines
+    organize stafflines in staves
+    smooth and trim stafflines
+\end{verbatim}
+
+\subsection{Résultat présenté}
+\par Cet article a montré également le résultat en applicant cet algorithme proposé. Selon les data, il atteint un taux de false positive de $1.3\%$ et un taux de false négative à $1.4\%$.
+
+\section{Conclusion}
+\par Dans ce rapport, j'ai présenté un domaine de recherche lié avec l'intelligence artificielle ; c'est la reconnaissance optique de musique. J'ai étudié un état de l'art ainsi un algorithme spécifique de cette problématique en lisant deux articles\cite{dos2009staff}\cite{shatri2020optical}. Ensuite j'ai présenté l'algorithme utilisé dans l'article \cite{dos2009staff}.
+
+\par Personnellement je trouve que le domaine de recherche est très intéressant, et j'apprécie l'algorithme proposé par cet article, qui est concis et efficace ; la créativité de traduire le problème d'un domaine appliqué vers un autre plus théorique est très impressionnante. 
+
+\newpage
+\bibliography{ref.bib}
+\bibliographystyle{plainnat}
+
+\end{document}
