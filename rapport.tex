@@ -25,7 +25,7 @@
 \par Les recherches étudient principalement avec les notations \textit{Common Western Music Notation}, qui sont les notations utilisées couramment. Un pipeline de traitement a été établit basé sur ces notations avec l'ordre suivante :
 \begin{itemize}
     \item prétraitement d'image ;
-    \item détection des symboles musicaux ;
+    \item identification des notations musicales ;
     \item reconstruction des notations ;
     \item encodage et archivage.
 \end{itemize}
@@ -69,6 +69,8 @@ Postprocessing:
     organize stafflines in staves
     smooth and trim stafflines
 \end{verbatim}
+
+\par Je reformule cet algorithme maintenant avec mes propres phrases. L'algorithme commence par trouver la marge gauche et la marge droite d'une partition. Ensuite il cherche les \textit{stable path} entre ces deux régions, qui sont théoriquement les \textit{staff}. Chaque fois il trouve un tel chemin, il l'efface et il cherche encore un nouveau, jusqu'à il n'y a plus. L'ensemble des chemins est donc le \textit{staff}.
 
 \subsection{Résultat présenté}
 \par Cet article a montré également le résultat en applicant cet algorithme proposé. Selon les data, il atteint un taux de false positive de $1.3\%$ et un taux de false négative à $1.4\%$.
